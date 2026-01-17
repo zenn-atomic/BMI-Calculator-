@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BMI Calculator</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 100%;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .input-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .input-hint {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+        margin-bottom: 20px;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      #resultContainer {
+        display: none;
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        border-left: 5px solid #667eea;
+      }
+
+      #resultContainer.show {
+        display: block;
+      }
+
+      .bmi-value {
+        font-size: 48px;
+        font-weight: bold;
+        margin: 15px 0;
+        color: #667eea;
+      }
+
+      .bmi-category {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 8px;
+        color: white;
+      }
+
+      .bmi-category.underweight {
+        background-color: #3498db;
+      }
+
+      .bmi-category.normal {
+        background-color: #2ecc71;
+      }
+
+      .bmi-category.overweight {
+        background-color: #f39c12;
+      }
+
+      .bmi-category.obese {
+        background-color: #e74c3c;
+      }
+
+      .bmi-description {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        line-height: 1.6;
+      }
+
+      .bmi-table {
+        margin-top: 25px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .bmi-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .bmi-table th,
+      .bmi-table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .bmi-table th {
+        background-color: #f0f0f0;
+        font-weight: 600;
+      }
+
+      #errorMsg {
+        color: #e74c3c;
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 14px;
+        display: none;
+      }
+
+      #errorMsg.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚖️ BMI Calculator</h1>
+      <p class="subtitle">Hitung Body Mass Index Anda</p>
+
+      <div id="errorMsg"></div>
+
+      <div class="input-group">
+        <label for="height">Tinggi Badan (cm)</label>
+        <input type="number" id="height" placeholder="Contoh: 170" />
+        <div class="input-hint">Masukkan dalam centimeter</div>
+      </div>
+
+      <div class="input-group">
+        <label for="weight">Berat Badan (kg)</label>
+        <input type="number" id="weight" placeholder="Contoh: 70" />
+        <div class="input-hint">Masukkan dalam kilogram</div>
+      </div>
+
+      <button id="calculateBtn">Hitung BMI</button>
+
+      <div id="resultContainer">
+        <h2>Hasil BMI Anda</h2>
+        <div class="bmi-value" id="bmiValue"></div>
+        <div class="bmi-category" id="bmiCategory"></div>
+        <div class="bmi-description" id="bmiDescription"></div>
+
+        <div class="bmi-table">
+          <p><strong>Kategori BMI:</strong></p>
+          <table>
+            <tr>
+              <th>Kategori</th>
+              <th>BMI</th>
+            </tr>
+            <tr>
+              <td>Kurus</td>
+              <td>&lt; 18.5</td>
+            </tr>
+            <tr>
+              <td>Normal</td>
+              <td>18.5 - 24.9</td>
+            </tr>
+            <tr>
+              <td>Gemuk</td>
+              <td>25.0 - 29.9</td>
+            </tr>
+            <tr>
+              <td>Obesitas</td>
+              <td>≥ 30.0</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="bmi.js"></script>
+  </body>
+</html>
